@@ -1,19 +1,40 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import ResultsTable from './ResultsTable';
 
-interface domainSuggestions {
+interface DomainSuggestion {
   domain: string;
   justification: string;
 }
 
-function DomainGenerator() {
-  const [domain, setDomain] = useState("");
-  const [domainPrompt, setDomainPrompt] = useState("I want to buy a domain");
-  const [domainSuggestions, setDomainsuggestions] = useState<domainSuggestions[]>([]);
+import {
+  Textarea
+} from "@/app/components/ui/textarea";
 
-  const getDomains = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+import {
+  Input
+} from "@/app/components/ui/input";
+
+import {
+  Button
+} from "@/app/components/ui/button";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/ui/card";
+
+function DomainGenerator() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [domainPrompt, setDomainPrompt] = useState("");
+  const [domainSuggestions, setDomainsuggestions] = useState<DomainSuggestion[]>([]);
+
+  const getDomains = async (domain: string) => {
     const response = await fetch("http://localhost:3000/api/getDomains", {
       method: "POST",
       headers: {
@@ -22,12 +43,10 @@ function DomainGenerator() {
       body: JSON.stringify({ domain })
     }).then(response => response.json());
 
-    console.log(response);
-    setDomainsuggestions(response.price);
+    return response;
   };
 
-  const genDomains = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const genDomains = async (domainPrompt: string) => {
     const response = await fetch("http://localhost:3000/api/genDomains", {
       method: "POST",
       headers: {
@@ -40,30 +59,35 @@ function DomainGenerator() {
       })
     }).then(response => response.json());
 
-    const message = JSON.parse(response.message);
+    return JSON.parse(response.message);
+  };
 
-    const domainPromises = message.domains.map((domain: domainSuggestions) =>
-      fetch("http://localhost:3000/api/getDomains", {
-        method: "POST",
-        headers: {
-          "domain": domain.domain,
-        },
-        body: JSON.stringify({ domain: domain.domain })
-      }).then(response => response.json())
+  const updateDomains = async (domains: DomainSuggestion[]) => {
+    const domainPromises = domains.map((domain: DomainSuggestion) =>
+      getDomains(domain.domain)
     );
 
     const domainDetails = await Promise.all(domainPromises);
 
-    const updatedDomains = message.domains.map((domain: domainSuggestions, index: number) => ({
+    return domains.map((domain: DomainSuggestion, index: number) => ({
       ...domain,
       available: domainDetails[index].available,
       price: domainDetails[index].available ? parsePrice(domainDetails[index].price) : ''
     }));
-
-    setDomainsuggestions(updatedDomains);
   };
 
-  function parsePrice(price: number): number {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const message = await genDomains(domainPrompt);
+    const updatedDomains = await updateDomains(message.domains);
+
+    setDomainsuggestions(updatedDomains);
+    setIsLoading(false);
+  };
+
+  const parsePrice = (price: number): number => {
     let priceStr = price.toString();
     priceStr = priceStr.replace(/0+$/, '');
     if (priceStr.length <= 2) {
@@ -73,43 +97,59 @@ function DomainGenerator() {
     const position = priceStr.length - 2;
     priceStr = priceStr.substring(0, position) + '.' + priceStr.substring(position);
     return parseFloat(priceStr);
-  }
+  };
+
+  const resetForm = () => {
+    setDomainPrompt("");
+    setDomainsuggestions([]);
+  };
 
   return (
-    <div>
-      <form onSubmit={(e) => genDomains(e)} className='flex flex-col'>
-        <label>
-          prompt:
-          <input type="text" onChange={(e) => setDomainPrompt(e.target.value)} />
-        </label>
-        <button type="submit">Check</button>
-      </form>
-
-
-      {(domainSuggestions.length > 0) && (
-        <div>
-          <h2>Response:</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Domain</th>
-                {/* <th>Justification</th> */}
-                <th>Availability</th>
-              </tr>
-            </thead>
-            <tbody>
-              {domainSuggestions.map((item: any, index: number) => (
-                <tr key={index}>
-                  <td><a href={`https://www.godaddy.com/en-uk/domainsearch/find?domainToCheck=${item.domain}`} target='_blank'>{item.domain}</a></td>
-                  {/* <td>{item.justification}</td> */}
-                  {item.available ? <td>${item.price}</td> : <td>unavailable</td>}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
+    <div className='relative w-full grow'>
+      <h1
+        className="text-xl font-bold w-full"
+        onClick={() => { if (!isLoading) resetForm(); }}>
+        anditscalled<span className='text-xl'>.com</span>
+      </h1>
+      {(domainSuggestions.length === 0) ? (
+        <>
+          <Image
+            src="/hero-art.png"
+            alt="domainiac banner"
+            className={`w-full h-auto rounded-lg mb-4`}
+            width={0}
+            height={0}
+            sizes="100vw"
+            unoptimized />
+          <Card className='-translate-y-10'>
+            <CardHeader>
+              <CardTitle>What's your idea?</CardTitle>
+              <CardDescription>Describe your idea, product, or service and we'll generate some domain ideas</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={(e) => handleSubmit(e)} className='grid gap-2'>
+                <div>
+                  <h3 className='font-semibold text-base'></h3>
+                  <p className='text-sm text-slate-600'></p>
+                </div>
+                <Input
+                  id='idea'
+                  placeholder='a trumpet for cats...'
+                  onChange={(e) => setDomainPrompt(e.target.value)}
+                  disabled={isLoading}
+                />
+                <Button type="submit" className='bg-black py-2 px-4 rounded-md text-zinc-200'
+                  disabled={domainPrompt.length === 0 || isLoading}>Generate</Button>
+              </form>
+            </CardContent>
+          </Card>
+        </>
+      ) : (
+        <>
+          <ResultsTable domainSuggestions={domainSuggestions} />
+        </>)
+      }
+    </div >
   );
 };
 
