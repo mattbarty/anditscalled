@@ -57,7 +57,7 @@ function DomainGenerator() {
     const updatedDomains = message.domains.map((domain: domainSuggestions, index: number) => ({
       ...domain,
       available: domainDetails[index].available,
-      price: parsePrice(domainDetails[index].price)
+      price: domainDetails[index].available ? parsePrice(domainDetails[index].price) : ''
     }));
 
     setDomainsuggestions(updatedDomains);
@@ -94,8 +94,7 @@ function DomainGenerator() {
               <tr>
                 <th>Domain</th>
                 {/* <th>Justification</th> */}
-                <th>Available</th>
-                <th>Price ($USD)</th>
+                <th>Availability</th>
               </tr>
             </thead>
             <tbody>
@@ -103,8 +102,7 @@ function DomainGenerator() {
                 <tr key={index}>
                   <td>{item.domain}</td>
                   {/* <td>{item.justification}</td> */}
-                  <td>{item.available ? 'Yes' : 'No'}</td>
-                  <td>${item.price}</td>
+                  {item.available ? <td>${item.price}</td> : <td>unavailable</td>}
                 </tr>
               ))}
             </tbody>
