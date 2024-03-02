@@ -100,7 +100,7 @@ function DomainGenerator() {
             <tbody>
               {domainSuggestions.map((item: any, index: number) => (
                 <tr key={index}>
-                  <td>{item.domain}</td>
+                  <td><a href={`https://www.godaddy.com/en-uk/domainsearch/find?domainToCheck=${item.domain}`} target='_blank'>{item.domain}</a></td>
                   {/* <td>{item.justification}</td> */}
                   {item.available ? <td>${item.price}</td> : <td>unavailable</td>}
                 </tr>
