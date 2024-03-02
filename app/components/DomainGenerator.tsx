@@ -105,14 +105,14 @@ function DomainGenerator() {
   };
 
   return (
-    <div className='relative w-full grow'>
+    <div className='flex flex-col w-full justify-center'>
       <h1
         className="text-xl font-bold w-full"
         onClick={() => { if (!isLoading) resetForm(); }}>
         anditscalled<span className='text-xl'>.com</span>
       </h1>
       {(domainSuggestions.length === 0) ? (
-        <>
+        <div className='flex flex-col w-full justify-center'>
           <Image
             src="/hero-art.png"
             alt="domainiac banner"
@@ -121,7 +121,7 @@ function DomainGenerator() {
             height={0}
             sizes="100vw"
             unoptimized />
-          <Card className='-translate-y-10'>
+          <Card className='-translate-y-10 md:-translate-y-20 md:max-w-md'>
             <CardHeader>
               <CardTitle>What's your idea?</CardTitle>
               <CardDescription>Describe your idea, product, or service and we'll generate some domain ideas</CardDescription>
@@ -143,7 +143,7 @@ function DomainGenerator() {
               </form>
             </CardContent>
           </Card>
-        </>
+        </div>
       ) : (
         <>
           <ResultsTable domainSuggestions={domainSuggestions} />
