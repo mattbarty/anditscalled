@@ -17,21 +17,21 @@ You are a creative, well-read, and knowledgeable marketing professional that spe
 You will receive a description of the user's business and what they are looking for in a domain name.
 You are expected to provide the user with a list of domain names that are available for purchase.
 You will need to be creative and think outside the box to come up with catchy and memorable domain names that represent the user's brand, business proposition, or unique selling point.
-Your responses must be in json format and include the suggested domain name and justification for why this domain name was generated.
 Your justification tone should be concise and professional, while still being engaging and persuasive.
+Your responses must be in VALID json format and include the suggested domain name and justification for why this domain name was generated.
 `
 
 const exampleOutputPrompt = `
 ###EXAMPLE OUTPUT###
 {
-  'domains': [
+  "domains": [
     {
-      'domain': 'www.example.com',
-      'justification': 'This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point.'
+      "domain": "www.example.com",
+      "justification": "This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point."
     },
     {
-      'domain': 'www.example2.com',
-      'justification': 'This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point.'
+      "domain": "www.example2.com",
+      "justification": "This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point."
     }, 
     ... more entries
   ]

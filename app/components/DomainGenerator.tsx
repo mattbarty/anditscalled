@@ -2,10 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 
+interface domainSuggestions {
+  domain: string;
+  justification: string;
+}
+
 function DomainGenerator() {
   const [domain, setDomain] = useState("");
   const [domainPrompt, setDomainPrompt] = useState("I want to buy a domain");
-  const [response, setResponse] = useState(null);
+  const [domainSuggestions, setDomainsuggestions] = useState<domainSuggestions[]>([]);
 
   const getDomains = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,7 +23,7 @@ function DomainGenerator() {
     }).then(response => response.json());
 
     console.log(response);
-    setResponse(response.price);
+    setDomainsuggestions(response.price);
   };
 
   const genDomains = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,7 +40,9 @@ function DomainGenerator() {
       })
     }).then(response => response.json());
 
-    setResponse(response.message);
+    const message = JSON.parse(response.message);
+
+    setDomainsuggestions(message.domains);
   };
 
   return (
@@ -48,10 +55,26 @@ function DomainGenerator() {
         <button type="submit">Check</button>
       </form>
 
-      {response && (
+
+      {(domainSuggestions.length > 0) && (
         <div>
           <h2>Response:</h2>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
+          <table>
+            <thead>
+              <tr>
+                <th>Domain</th>
+                <th>Justification</th>
+              </tr>
+            </thead>
+            <tbody>
+              {domainSuggestions.map((item: any, index: number) => (
+                <tr key={index}>
+                  <td>{item.domain}</td>
+                  <td>{item.justification}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
