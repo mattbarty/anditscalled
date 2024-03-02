@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function DomainGenerator() {
   const [domain, setDomain] = useState("");
+  const [domainPrompt, setDomainPrompt] = useState("I want to buy a domain");
   const [response, setResponse] = useState(null);
 
   const getDomains = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +30,7 @@ function DomainGenerator() {
       },
       body: JSON.stringify({
         messages: [
-          { role: "user", content: "I want to buy a domain" },
+          { role: "user", content: domainPrompt },
         ]
       })
     }).then(response => response.json());
@@ -37,13 +38,12 @@ function DomainGenerator() {
     setResponse(response.message);
   };
 
-
   return (
     <div>
-      <form onSubmit={(e) => getDomains(e)} className='flex flex-col'>
+      <form onSubmit={(e) => genDomains(e)} className='flex flex-col'>
         <label>
           prompt:
-          <input type="text" value={domain} onChange={(e) => setDomain(e.target.value)} />
+          <input type="text" onChange={(e) => setDomainPrompt(e.target.value)} />
         </label>
         <button type="submit">Check</button>
       </form>
