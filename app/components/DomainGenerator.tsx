@@ -3,7 +3,22 @@
 import React, { useState } from 'react';
 
 function DomainGenerator() {
+  const [domain, setDomain] = useState("");
   const [response, setResponse] = useState(null);
+
+  const getDomains = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const response = await fetch("http://localhost:3000/api/getDomains", {
+      method: "POST",
+      headers: {
+        "domain": domain,
+      },
+      body: JSON.stringify({ domain })
+    }).then(response => response.json());
+
+    console.log(response);
+    setResponse(response.price);
+  };
 
   const genDomains = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,10 +40,10 @@ function DomainGenerator() {
 
   return (
     <div>
-      <form onSubmit={(e) => genDomains(e)} className='flex flex-col'>
+      <form onSubmit={(e) => getDomains(e)} className='flex flex-col'>
         <label>
           prompt:
-          <input type="text" />
+          <input type="text" value={domain} onChange={(e) => setDomain(e.target.value)} />
         </label>
         <button type="submit">Check</button>
       </form>
