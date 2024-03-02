@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+interface domainSuggestions {
+  domain: string;
+  justification: string;
+}
 
 function DomainGenerator() {
   const [domain, setDomain] = useState("");
-  const [response, setResponse] = useState(null);
+  const [domainPrompt, setDomainPrompt] = useState("I want to buy a domain");
+  const [domainSuggestions, setDomainsuggestions] = useState<domainSuggestions[]>([]);
 
   const getDomains = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,7 +23,7 @@ function DomainGenerator() {
     }).then(response => response.json());
 
     console.log(response);
-    setResponse(response.price);
+    setDomainsuggestions(response.price);
   };
 
   const genDomains = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,29 +35,78 @@ function DomainGenerator() {
       },
       body: JSON.stringify({
         messages: [
-          { role: "user", content: "I want to buy a domain" },
+          { role: "user", content: domainPrompt },
         ]
       })
     }).then(response => response.json());
 
-    setResponse(response.message);
+    const message = JSON.parse(response.message);
+
+    const domainPromises = message.domains.map((domain: domainSuggestions) =>
+      fetch("http://localhost:3000/api/getDomains", {
+        method: "POST",
+        headers: {
+          "domain": domain.domain,
+        },
+        body: JSON.stringify({ domain: domain.domain })
+      }).then(response => response.json())
+    );
+
+    const domainDetails = await Promise.all(domainPromises);
+
+    const updatedDomains = message.domains.map((domain: domainSuggestions, index: number) => ({
+      ...domain,
+      available: domainDetails[index].available,
+      price: domainDetails[index].available ? parsePrice(domainDetails[index].price) : ''
+    }));
+
+    setDomainsuggestions(updatedDomains);
   };
 
+  function parsePrice(price: number): number {
+    let priceStr = price.toString();
+    priceStr = priceStr.replace(/0+$/, '');
+    if (priceStr.length <= 2) {
+      // Ensure there's padding for cases like `99` which should become `0.99`
+      priceStr = priceStr.padStart(3, '0');
+    }
+    const position = priceStr.length - 2;
+    priceStr = priceStr.substring(0, position) + '.' + priceStr.substring(position);
+    return parseFloat(priceStr);
+  }
 
   return (
     <div>
-      <form onSubmit={(e) => getDomains(e)} className='flex flex-col'>
+      <form onSubmit={(e) => genDomains(e)} className='flex flex-col'>
         <label>
           prompt:
-          <input type="text" value={domain} onChange={(e) => setDomain(e.target.value)} />
+          <input type="text" onChange={(e) => setDomainPrompt(e.target.value)} />
         </label>
         <button type="submit">Check</button>
       </form>
 
-      {response && (
+
+      {(domainSuggestions.length > 0) && (
         <div>
           <h2>Response:</h2>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
+          <table>
+            <thead>
+              <tr>
+                <th>Domain</th>
+                {/* <th>Justification</th> */}
+                <th>Availability</th>
+              </tr>
+            </thead>
+            <tbody>
+              {domainSuggestions.map((item: any, index: number) => (
+                <tr key={index}>
+                  <td><a href={`https://www.godaddy.com/en-uk/domainsearch/find?domainToCheck=${item.domain}`} target='_blank'>{item.domain}</a></td>
+                  {/* <td>{item.justification}</td> */}
+                  {item.available ? <td>${item.price}</td> : <td>unavailable</td>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
