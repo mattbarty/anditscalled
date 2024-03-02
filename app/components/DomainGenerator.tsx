@@ -57,11 +57,23 @@ function DomainGenerator() {
     const updatedDomains = message.domains.map((domain: domainSuggestions, index: number) => ({
       ...domain,
       available: domainDetails[index].available,
-      price: domainDetails[index].price
+      price: parsePrice(domainDetails[index].price)
     }));
 
     setDomainsuggestions(updatedDomains);
   };
+
+  function parsePrice(price: number): number {
+    let priceStr = price.toString();
+    priceStr = priceStr.replace(/0+$/, '');
+    if (priceStr.length <= 2) {
+      // Ensure there's padding for cases like `99` which should become `0.99`
+      priceStr = priceStr.padStart(3, '0');
+    }
+    const position = priceStr.length - 2;
+    priceStr = priceStr.substring(0, position) + '.' + priceStr.substring(position);
+    return parseFloat(priceStr);
+  }
 
   return (
     <div>
@@ -83,7 +95,7 @@ function DomainGenerator() {
                 <th>Domain</th>
                 {/* <th>Justification</th> */}
                 <th>Available</th>
-                <th>Price</th>
+                <th>Price ($USD)</th>
               </tr>
             </thead>
             <tbody>
@@ -92,7 +104,7 @@ function DomainGenerator() {
                   <td>{item.domain}</td>
                   {/* <td>{item.justification}</td> */}
                   <td>{item.available ? 'Yes' : 'No'}</td>
-                  <td>{item.price}</td>
+                  <td>${item.price}</td>
                 </tr>
               ))}
             </tbody>
