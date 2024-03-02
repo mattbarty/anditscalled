@@ -42,7 +42,25 @@ function DomainGenerator() {
 
     const message = JSON.parse(response.message);
 
-    setDomainsuggestions(message.domains);
+    const domainPromises = message.domains.map((domain: domainSuggestions) =>
+      fetch("http://localhost:3000/api/getDomains", {
+        method: "POST",
+        headers: {
+          "domain": domain.domain,
+        },
+        body: JSON.stringify({ domain: domain.domain })
+      }).then(response => response.json())
+    );
+
+    const domainDetails = await Promise.all(domainPromises);
+
+    const updatedDomains = message.domains.map((domain: domainSuggestions, index: number) => ({
+      ...domain,
+      available: domainDetails[index].available,
+      price: domainDetails[index].price
+    }));
+
+    setDomainsuggestions(updatedDomains);
   };
 
   return (
@@ -63,14 +81,18 @@ function DomainGenerator() {
             <thead>
               <tr>
                 <th>Domain</th>
-                <th>Justification</th>
+                {/* <th>Justification</th> */}
+                <th>Available</th>
+                <th>Price</th>
               </tr>
             </thead>
             <tbody>
               {domainSuggestions.map((item: any, index: number) => (
                 <tr key={index}>
                   <td>{item.domain}</td>
-                  <td>{item.justification}</td>
+                  {/* <td>{item.justification}</td> */}
+                  <td>{item.available ? 'Yes' : 'No'}</td>
+                  <td>{item.price}</td>
                 </tr>
               ))}
             </tbody>
