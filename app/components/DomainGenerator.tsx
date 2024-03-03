@@ -6,6 +6,8 @@ import Image from 'next/image';
 interface DomainSuggestion {
   domain: string;
   justification: string;
+  available?: boolean;
+  price?: number;
 }
 
 import {
@@ -41,9 +43,10 @@ import { ExternalLink, Sparkles, Loader2 } from "lucide-react";
 function DomainGenerator() {
   const [isLoading, setIsLoading] = useState(false);
   const [domainPrompt, setDomainPrompt] = useState("");
-  const [domainSuggestions, setDomainsuggestions] = useState<DomainSuggestion[]>([]);
+  const [domainSuggestions, setDomainSuggestions] = useState<DomainSuggestion[]>([]);
   const [openItem, setOpenItem] = useState('generate');
-  const [selectedDomain, setSelectedDomain] = useState<DomainSuggestion>(null);
+  const [selectedDomain, setSelectedDomain] = useState<DomainSuggestion>({} as DomainSuggestion);
+  const [isLoadingDomainDetails, setIsLoadingDomainDetails] = useState(true);
 
   const getDomains = async (domain: string) => {
     const response = await fetch("http://localhost:3000/api/getDomains", {
@@ -73,29 +76,16 @@ function DomainGenerator() {
     return JSON.parse(response.message);
   };
 
-  const updateDomains = async (domains: DomainSuggestion[]) => {
-    const domainPromises = domains.map((domain: DomainSuggestion) =>
-      getDomains(domain.domain)
-    );
-
-    const domainDetails = await Promise.all(domainPromises);
-
-    return domains.map((domain: DomainSuggestion, index: number) => ({
-      ...domain,
-      available: domainDetails[index].available,
-      price: domainDetails[index].available ? parsePrice(domainDetails[index].price) : ''
-    }));
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setOpenItem('suggestions');
 
     const message = await genDomains(domainPrompt);
-    // const updatedDomains = await updateDomains(message.domains);
+
     setSelectedDomain(message.domains[0]);
-    setDomainsuggestions(message.domains);
+    await fetchDomainDetails(message.domains[0]);
+    setDomainSuggestions(message.domains);
     setIsLoading(false);
   };
 
@@ -109,6 +99,29 @@ function DomainGenerator() {
     const position = priceStr.length - 2;
     priceStr = priceStr.substring(0, position) + '.' + priceStr.substring(position);
     return parseFloat(priceStr);
+  };
+
+  const fetchDomainDetails = async (domain: DomainSuggestion) => {
+    console.log('fetching domain details');
+    setIsLoadingDomainDetails(true);
+    const domainDetails = await getDomains(domain.domain);
+    const updatedDomain = {
+      ...domain,
+      available: domainDetails.available,
+      price: domainDetails.available ? parsePrice(domainDetails.price) : undefined
+    };
+
+    const updatedDomains = domainSuggestions.map(d => d.domain === domain.domain ? updatedDomain : d);
+    setDomainSuggestions(updatedDomains);
+    setSelectedDomain(updatedDomain);
+    setIsLoadingDomainDetails(false);
+  };
+
+  const handleSelectedDomainClick = async (domain: DomainSuggestion) => {
+    setSelectedDomain(domain);
+    if (domain && domain.available === undefined && domain.price === undefined) {
+      await fetchDomainDetails(domain);
+    };
   };
 
   const SkeletonCard = () => {
@@ -208,14 +221,25 @@ function DomainGenerator() {
                       <CardHeader>
                         <CardTitle>{selectedDomain.domain}</CardTitle>
                       </CardHeader>
-                      <CardContent>
-                        <CardDescription>{selectedDomain.justification}</CardDescription>
+                      <CardContent className='max-h-[7em] overflow-hidden'>
+                        <CardDescription
+                          className=' max-h-[7em] pr-[1em]'
+                        >{selectedDomain.justification}</CardDescription>
                       </CardContent>
-                      <CardFooter className=''>
+                      <CardFooter className='mt-4'>
                         <div className='flex justify-between w-full items-center'>
-                          <div className='flex items-center p-1'>
-                            <div className='rounded-sm h-4 w-4 mr-2 bg-green-500 p-1'></div>
-                            <p>Available ($9.99)</p>
+                          <div className='flex items-center p-1 w-1/2'>
+                            {isLoadingDomainDetails ? (
+                              <div className='flex w-full'>
+                                <Skeleton className='rounded-sm h-4 w-4 mr-2 p-1' />
+                                <Skeleton className='w-3/4 h-4' />
+                              </div>
+                            ) : (
+                              <>
+                                <div className={`rounded-sm h-4 w-4 mr-2 p-1 ${(selectedDomain.available) ? `bg-green-500` : `bg-slate-400`}`}></div>
+                                <p>{selectedDomain.available ? `Available ($${selectedDomain.price})` : 'Unavailable'}</p>
+                              </>
+                            )}
                           </div>
                           <a
                             href={`https://www.godaddy.com/en-uk/domainsearch/find?domainToCheck=${selectedDomain.domain}`}
@@ -234,7 +258,7 @@ function DomainGenerator() {
                           {domainSuggestions.map((item, index) => (
                             <div key={index}
                               className={`m-1 p-2 rounded whitespace-nowrap hover:cursor-pointer  ${(selectedDomain.domain === item.domain) ? 'bg-black   text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                              onClick={() => setSelectedDomain(item)}>
+                              onClick={() => handleSelectedDomainClick(item)}>
                               {item.domain}
                             </div>
                           ))}
@@ -254,3 +278,26 @@ function DomainGenerator() {
 };
 
 export default DomainGenerator;
+
+const tempDomains = [
+  {
+    "domain": "LobsterSlip.com",
+    "justification": "This domain name combines the keywords 'lobster' and 'slip,' clearly indicating the products being offered. It is concise, easy to remember, and directly relates to the business of providing slippers for lobsters."
+  },
+  {
+    "domain": "CozyClaws.com",
+    "justification": "This domain name is catchy and memorable, using the word 'Cozy' to evoke comfort and 'Claws' to reference lobsters. It creates a playful and inviting image for the business of offering slippers for lobsters."
+  },
+  {
+    "domain": "ClawCushion.com",
+    "justification": "This domain name emphasizes the idea of providing cushioning or comfort for claws, which is unique and relevant to the product being sold. It is easy to spell, remember, and signifies the business of selling cozy slippers for lobsters."
+  },
+  {
+    "domain": "LobsterLoungeWear.com",
+    "justification": "This domain name conveys the concept of lounge wear for lobsters, indicating relaxation and comfort. It is descriptive, memorable, and directly relates to the business of offering slippers as part of the lobster's lounging attire."
+  },
+  {
+    "domain": "PamperedPincers.com",
+    "justification": "This domain name uses alliteration with 'Pampered Pincers' to suggest luxury and care for lobsters. It is engaging, unique, and clearly reflects the business of providing specialized slippers for the pampering of lobster claws."
+  }
+];
