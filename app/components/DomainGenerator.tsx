@@ -239,9 +239,9 @@ function DomainGenerator() {
             <AccordionContent>
               <div className='flex justify-center relative w-full'>
                 <Image src='/sproutlingdomains-hero.png' alt='domain generator' width={400} height={500} />
-                <div className='absolute left-1/3 bottom-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 animate-bounce font-semibold text-slate-200 duration-1000'>.com</div>
-                <div className='absolute right-20 bottom-2/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 animate-bounce font-semibold text-slate-200 duration-700'>.xyz</div>
-                <div className='absolute left-20 top-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 animate-bounce font-semibold text-slate-200 duration-800'>.io</div>
+                <div className='absolute left-1/3 bottom-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText1 font-semibold text-slate-200 duration-1000'>.com</div>
+                <div className='absolute right-20 bottom-2/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText2 font-semibold text-slate-200 duration-700'>.xyz</div>
+                <div className='absolute left-20 top-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText3 font-semibold text-slate-200 duration-800'>.io</div>
               </div>
               <Card className='md:max-w-md -translate-y-5'>
                 <CardHeader>
