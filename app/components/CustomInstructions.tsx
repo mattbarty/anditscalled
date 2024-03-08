@@ -19,6 +19,8 @@ import { Label } from "@/app/components/ui/label";
 
 import { Switch } from "@/app/components/ui/switch";
 
+import { useToast } from "@/app/components/ui/use-toast";
+
 const domainStyles = [
   {
     id: "compound",
@@ -44,12 +46,22 @@ const domainStyles = [
 
 const CustomInstructions = () => {
   const [switchStates, setSwitchStates] = useState(
-    Object.fromEntries(domainStyles.map(style => [style.id, false]))
+    Object.fromEntries(domainStyles.map(style => [style.id, style.id === 'compound']))
   );
 
+  const { toast } = useToast();
+
   const handleSwitchChange = (id: string, checked: boolean) => {
+    if (!checked && Object.values(switchStates).filter(value => value).length === 1 && switchStates[id]) {
+      toast({
+        description: "You must have at least one domain style selected.",
+        variant: "destructive",
+        duration: 3000,
+      });
+      return;
+    }
+
     setSwitchStates(prev => ({ ...prev, [id]: checked }));
-    console.log(switchStates);
   };
   return (
     <>
@@ -60,10 +72,12 @@ const CustomInstructions = () => {
         </DialogDescription>
       </DialogHeader>
       <Accordion type="single" collapsible>
-        <AccordionItem value="item-1">
-          <AccordionTrigger>Domain Styles</AccordionTrigger>
+        <AccordionItem value="styles">
+          <AccordionTrigger>
+            Domain Styles
+          </AccordionTrigger>
           <AccordionContent>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
               {domainStyles.map((style) => (
                 <div key={style.id} className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                   <div className="space-y-0.5">
@@ -73,22 +87,18 @@ const CustomInstructions = () => {
                     </p>
                   </div>
                   <Switch
-                    checked={switchStates[style.label]}
+                    checked={switchStates[style.id]}
                     onCheckedChange={(checked) => handleSwitchChange(style.id, checked)}
-                    aria-readonly
                   />
                 </div>
               ))}
             </div>
           </AccordionContent>
         </AccordionItem>
-        <AccordionItem value="item-2">
+        <AccordionItem value="instructions">
           <AccordionTrigger>Custom Instructions</AccordionTrigger>
           <AccordionContent>
-            <button>deselect all</button>
-            <div className="grid grid-cols-2 gap-4">
-
-            </div>
+            <p>hello</p>
           </AccordionContent>
         </AccordionItem>
       </Accordion>
