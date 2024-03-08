@@ -11,6 +11,10 @@ interface DomainSuggestion {
 }
 
 import {
+  Label
+} from "@/app/components/ui/label";
+
+import {
   Skeleton
 } from "@/app/components/ui/skeleton";
 
@@ -38,7 +42,16 @@ import {
   AccordionTrigger,
 } from "@/app/components/ui/accordion";
 
-import { ExternalLink, Sparkles, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/app/components/ui/dialog";
+
+import { ExternalLink, Sparkles, Loader2, Settings2 } from "lucide-react";
 
 function DomainGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -188,8 +201,31 @@ function DomainGenerator() {
                       <h3 className='font-semibold text-base'></h3>
                       <p className='text-sm text-slate-600'></p>
                     </div>
+                    <div className='flex gap-6 items-center'>
+                      <div className='flex w-full justify-between'>
+                        <Label htmlFor='prompt'>Prompt</Label>
+                        <Dialog>
+                          <DialogTrigger className='text-slate-500'>
+                            <div className='flex'>
+                              <Settings2 className='p-1 mr-1' />
+                              settings
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Are you absolutely sure?</DialogTitle>
+                              <DialogDescription>
+                                This action cannot be undone. This will permanently delete your account
+                                and remove your data from our servers.
+                              </DialogDescription>
+                            </DialogHeader>
+                          </DialogContent>
+                        </Dialog>
+
+                      </div>
+                    </div>
                     <Input
-                      id='idea'
+                      id='prompt'
                       onChange={(e) => setDomainPrompt(e.target.value)}
                       disabled={isLoading}
                     />
@@ -278,26 +314,3 @@ function DomainGenerator() {
 };
 
 export default DomainGenerator;
-
-const tempDomains = [
-  {
-    "domain": "LobsterSlip.com",
-    "justification": "This domain name combines the keywords 'lobster' and 'slip,' clearly indicating the products being offered. It is concise, easy to remember, and directly relates to the business of providing slippers for lobsters."
-  },
-  {
-    "domain": "CozyClaws.com",
-    "justification": "This domain name is catchy and memorable, using the word 'Cozy' to evoke comfort and 'Claws' to reference lobsters. It creates a playful and inviting image for the business of offering slippers for lobsters."
-  },
-  {
-    "domain": "ClawCushion.com",
-    "justification": "This domain name emphasizes the idea of providing cushioning or comfort for claws, which is unique and relevant to the product being sold. It is easy to spell, remember, and signifies the business of selling cozy slippers for lobsters."
-  },
-  {
-    "domain": "LobsterLoungeWear.com",
-    "justification": "This domain name conveys the concept of lounge wear for lobsters, indicating relaxation and comfort. It is descriptive, memorable, and directly relates to the business of offering slippers as part of the lobster's lounging attire."
-  },
-  {
-    "domain": "PamperedPincers.com",
-    "justification": "This domain name uses alliteration with 'Pampered Pincers' to suggest luxury and care for lobsters. It is engaging, unique, and clearly reflects the business of providing specialized slippers for the pampering of lobster claws."
-  }
-];
