@@ -45,6 +45,7 @@ const domainStyles = [
 ] as const;
 
 const CustomInstructions = () => {
+  const [openItem, setOpenItem] = useState('styles');
   const [switchStates, setSwitchStates] = useState(
     Object.fromEntries(domainStyles.map(style => [style.id, style.id === 'compound']))
   );
@@ -71,7 +72,7 @@ const CustomInstructions = () => {
           Have something specific in mind? Tweak the settings to get the perfect domain name.
         </DialogDescription>
       </DialogHeader>
-      <Accordion type="single" collapsible>
+      <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>
         <AccordionItem value="styles">
           <AccordionTrigger>
             Domain Styles
