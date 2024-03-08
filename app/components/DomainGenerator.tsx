@@ -53,8 +53,9 @@ import {
 
 
 
-import { ExternalLink, Sparkles, Loader2, Settings2 } from "lucide-react";
+import { Sparkles, Loader2, Settings2 } from "lucide-react";
 import CustomInstructions from './CustomInstructions';
+import DomainSuggestions from './DomainSuggestions';
 
 const domainStyles = [
   {
@@ -106,7 +107,17 @@ function DomainGenerator() {
     return response;
   };
 
+  const transformPrompt = (domainPrompt: string, switchStates: Record<string, boolean>) => {
+    const styles = Object.entries(switchStates)
+      .filter(([_, value]) => value)
+      .map(([key, _]) => key)
+      .join(", ");
+
+    return `Please generate 10 domain names in the following styles: ${styles}. The domain name must be related to the following business description: ${domainPrompt}.`;
+  };
+
   const genDomains = async (domainPrompt: string) => {
+
     const response = await fetch("http://localhost:3000/api/genDomains", {
       method: "POST",
       headers: {
@@ -128,7 +139,9 @@ function DomainGenerator() {
     setDomainPrompt("");
     setOpenItem('suggestions');
 
-    const message = await genDomains(domainPrompt);
+    const completePrompt = transformPrompt(domainPrompt, switchStates);
+    console.log('completePrompt', completePrompt);
+    const message = await genDomains(completePrompt);
 
     setSelectedDomain(message.domains[0]);
     await fetchDomainDetails(message.domains[0]);
@@ -224,7 +237,13 @@ function DomainGenerator() {
           <AccordionItem value="generate">
             <AccordionTrigger>Generate Domains</AccordionTrigger>
             <AccordionContent>
-              <Card className='md:max-w-md'>
+              <div className='flex justify-center relative w-full'>
+                <Image src='/sproutlingdomains-hero.png' alt='domain generator' width={400} height={500} />
+                <div className='absolute left-1/3 bottom-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 animate-bounce font-semibold text-slate-200 duration-1000'>.com</div>
+                <div className='absolute right-20 bottom-2/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 animate-bounce font-semibold text-slate-200 duration-700'>.xyz</div>
+                <div className='absolute left-20 top-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 animate-bounce font-semibold text-slate-200 duration-800'>.io</div>
+              </div>
+              <Card className='md:max-w-md -translate-y-5'>
                 <CardHeader>
                   <CardTitle>What's your idea?</CardTitle>
                   <CardDescription>Describe your idea, product, or service and we'll generate some domain ideas</CardDescription>
@@ -237,13 +256,14 @@ function DomainGenerator() {
                     </div>
                     <div className='flex gap-6 items-center'>
                       <div className='flex w-full justify-between'>
-                        <Label htmlFor='prompt'>Prompt</Label>
+                        <Label htmlFor='prompt' className='p-1'>Prompt</Label>
                         <Dialog>
-                          <DialogTrigger className='text-slate-500'>
-                            <div className='flex'>
+                          <DialogTrigger className='text-slate-500' disabled>
+                            {/* DISABLED FOR NOW*/}
+                            {/* <div className='flex'>
                               <Settings2 className='p-1 mr-1' />
                               settings
-                            </div>
+                            </div> */}
                           </DialogTrigger>
                           <DialogContent>
                             <CustomInstructions switchStates={switchStates} setSwitchStates={setSwitchStates} domainStyles={domainStyles as unknown as DomainStyle[]} />
@@ -279,57 +299,7 @@ function DomainGenerator() {
                     <SkeletonDomainTags />
                   </>
                 ) : (
-                  <>
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>{selectedDomain.domain}</CardTitle>
-                      </CardHeader>
-                      <CardContent className='max-h-[7em] overflow-hidden'>
-                        <CardDescription
-                          className=' max-h-[7em] pr-[1em]'
-                        >{selectedDomain.justification}</CardDescription>
-                      </CardContent>
-                      <CardFooter className='mt-4'>
-                        <div className='flex justify-between w-full items-center'>
-                          <div className='flex items-center p-1 w-1/2'>
-                            {isLoadingDomainDetails ? (
-                              <div className='flex w-full'>
-                                <Skeleton className='rounded-sm h-4 w-4 mr-2 p-1' />
-                                <Skeleton className='w-3/4 h-4' />
-                              </div>
-                            ) : (
-                              <>
-                                <div className={`rounded-sm h-4 w-4 mr-2 p-1 ${(selectedDomain.available) ? `bg-green-500` : `bg-slate-400`}`}></div>
-                                <p>{selectedDomain.available ? `Available ($${selectedDomain.price})` : 'Unavailable'}</p>
-                              </>
-                            )}
-                          </div>
-                          <a
-                            href={`https://www.godaddy.com/en-uk/domainsearch/find?domainToCheck=${selectedDomain.domain}`}
-                            target='_blank'
-                            className='flex items-center text-teal-500 hover:text-teal-400 hover:underline hover:cursor-pointer'>
-                            <ExternalLink className='p-1 ' />
-                            See listing
-                          </a>
-                        </div>
-                      </CardFooter>
-                    </Card>
-                    <div>
-                      <h3 className='my-4 mx-1 text-zinc-600'>Click domain for details</h3>
-                      {domainSuggestions.length > 0 && (
-                        <div className="flex flex-wrap text-sm">
-                          {domainSuggestions.map((item, index) => (
-                            <div key={index}
-                              className={`m-1 p-2 rounded whitespace-nowrap hover:cursor-pointer  ${(selectedDomain.domain === item.domain) ? 'bg-black   text-white' : 'bg-gray-100 hover:bg-gray-200'}`}
-                              onClick={() => handleSelectedDomainClick(item)}>
-                              {item.domain}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                  </>
+                  <DomainSuggestions domainSuggestions={domainSuggestions} isLoadingDomainDetails={isLoadingDomainDetails} selectedDomain={selectedDomain} handleSelectedDomainClick={handleSelectedDomainClick} />
                 )}
               </AccordionContent>
             </AccordionItem>

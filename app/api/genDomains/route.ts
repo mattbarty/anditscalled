@@ -23,6 +23,22 @@ Your justification tone should be concise and professional, while still being en
 Your responses must be in VALID json format and include the suggested domain name and justification for why this domain name was generated.
 `
 
+const domainStylePrompt = `
+The user may also provide a list of domain styles that they are interested in.
+This can include descriptive, abstract, compound, acronym, or keyword-rich domain styles.
+
+###DOMAIN STYLES###
+Descriptive: Domains that clearly describe the business or service, providing immediate insight into what the website offers (e.g., FastFoodDelivery.com).
+
+Abstract: Names that don't necessarily relate directly to the business or service but are memorable and brandable (e.g., Zillow.com).
+
+Compound: Combining two relevant words to create a unique and memorable domain name (e.g., SnapChat.com).
+
+Acronym: Using initials or abbreviations to make the domain shorter and easier to remember (e.g., IBM.com for International Business Machines).
+
+Keyword-rich: Domains that contain keywords relevant to the business, which can potentially help with SEO (e.g., BestCoffeeBeans.com).
+`
+
 const exampleOutputPrompt = `
 ###EXAMPLE OUTPUT###
 {
@@ -43,9 +59,10 @@ const exampleOutputPrompt = `
 const systemPrompt = `
 ###SYSTEM###
 You are 'DomainGen', a helpful assistant that specializes in generating domain names for businesses.
-You will be assisting the user in generating a list of 5 creative, well-considered domain names based on their business description, requirements, and suggestions.
+You will be assisting the user in generating a list of creative, well-considered domain names based on their business description, requirements, and suggestions.
 ${userPrompt}
 ${agentPrompt}
+${domainStylePrompt}
 ${exampleOutputPrompt}`
 
 
