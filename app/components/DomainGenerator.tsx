@@ -52,6 +52,7 @@ import {
 } from "@/app/components/ui/dialog";
 
 import { ExternalLink, Sparkles, Loader2, Settings2 } from "lucide-react";
+import CustomInstructions from './CustomInstructions';
 
 function DomainGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -92,6 +93,7 @@ function DomainGenerator() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setDomainPrompt("");
     setOpenItem('suggestions');
 
     const message = await genDomains(domainPrompt);
@@ -212,16 +214,9 @@ function DomainGenerator() {
                             </div>
                           </DialogTrigger>
                           <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Are you absolutely sure?</DialogTitle>
-                              <DialogDescription>
-                                This action cannot be undone. This will permanently delete your account
-                                and remove your data from our servers.
-                              </DialogDescription>
-                            </DialogHeader>
+                            <CustomInstructions />
                           </DialogContent>
                         </Dialog>
-
                       </div>
                     </div>
                     <Input
