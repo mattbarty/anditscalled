@@ -21,34 +21,14 @@ import { Switch } from "@/app/components/ui/switch";
 
 import { useToast } from "@/app/components/ui/use-toast";
 
-const domainStyles = [
-  {
-    id: "compound",
-    label: "Compound (default)",
-    description: "Combines two relevant words to create a unique domain name."
-  },
-  {
-    id: "pun",
-    label: "Pun",
-    description: "Domains that play on words, offering a fun and catchy twist."
-  },
-  {
-    id: "descriptive",
-    label: "Descriptive",
-    description: "Clearly describes the business, providing immediate insight."
-  },
-  {
-    id: "abstract",
-    label: "Abstract",
-    description: "Memorable and brandable names that don’t necessarily relate directly to the business."
-  },
-] as const;
+interface DomainStyle {
+  id: string;
+  label: string;
+  description: string;
+}
 
-const CustomInstructions = () => {
+const CustomInstructions = ({ switchStates, setSwitchStates, domainStyles }: { switchStates: { [k: string]: boolean; }, setSwitchStates: any, domainStyles: DomainStyle[]; }) => {
   const [openItem, setOpenItem] = useState('styles');
-  const [switchStates, setSwitchStates] = useState(
-    Object.fromEntries(domainStyles.map(style => [style.id, style.id === 'compound']))
-  );
 
   const { toast } = useToast();
 
@@ -62,8 +42,9 @@ const CustomInstructions = () => {
       return;
     }
 
-    setSwitchStates(prev => ({ ...prev, [id]: checked }));
+    setSwitchStates((prev: any) => ({ ...prev, [id]: checked }));
   };
+
   return (
     <>
       <DialogHeader>

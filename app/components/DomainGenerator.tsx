@@ -51,8 +51,39 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 
+
+
 import { ExternalLink, Sparkles, Loader2, Settings2 } from "lucide-react";
 import CustomInstructions from './CustomInstructions';
+
+const domainStyles = [
+  {
+    id: "compound",
+    label: "Compound (default)",
+    description: "Combines two relevant words to create a unique domain name."
+  },
+  {
+    id: "pun",
+    label: "Pun",
+    description: "Domains that play on words, offering a fun and catchy twist."
+  },
+  {
+    id: "descriptive",
+    label: "Descriptive",
+    description: "Clearly describes the business, providing immediate insight."
+  },
+  {
+    id: "abstract",
+    label: "Abstract",
+    description: "Memorable and brandable names that don’t necessarily relate directly to the business."
+  },
+] as const;
+
+interface DomainStyle {
+  id: string;
+  label: string;
+  description: string;
+}
 
 function DomainGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +92,7 @@ function DomainGenerator() {
   const [openItem, setOpenItem] = useState('generate');
   const [selectedDomain, setSelectedDomain] = useState<DomainSuggestion>({} as DomainSuggestion);
   const [isLoadingDomainDetails, setIsLoadingDomainDetails] = useState(true);
+  const [switchStates, setSwitchStates] = useState(Object.fromEntries(domainStyles.map(style => [style.id, style.id === 'compound'])));
 
   const getDomains = async (domain: string) => {
     const response = await fetch("http://localhost:3000/api/getDomains", {
@@ -214,7 +246,7 @@ function DomainGenerator() {
                             </div>
                           </DialogTrigger>
                           <DialogContent>
-                            <CustomInstructions />
+                            <CustomInstructions switchStates={switchStates} setSwitchStates={setSwitchStates} domainStyles={domainStyles as unknown as DomainStyle[]} />
                           </DialogContent>
                         </Dialog>
                       </div>
