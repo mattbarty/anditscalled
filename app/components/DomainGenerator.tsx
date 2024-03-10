@@ -53,7 +53,7 @@ import {
 
 
 
-import { Sparkles, Loader2, Settings2 } from "lucide-react";
+import { Sparkles, Loader2, Settings2, CheckCircle } from "lucide-react";
 import CustomPromptSettings from './CustomPromptSettings';
 import DomainSuggestions from './DomainSuggestions';
 
@@ -66,8 +66,17 @@ function DomainGenerator() {
   const [openItem, setOpenItem] = useState('generate');
   const [selectedDomain, setSelectedDomain] = useState<DomainSuggestion>({} as DomainSuggestion);
   const [isLoadingDomainDetails, setIsLoadingDomainDetails] = useState(true);
-  const [domainStyle, setDomainStyle] = useState<string>('compound');
+  const [domainStyle, setDomainStyle] = useState<string>('pun');
   const [customInstructions, setCustomInstructions] = useState<string>('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
 
   const getDomains = async (domain: string) => {
     const response = await fetch("http://localhost:3000/api/getDomains", {
@@ -82,7 +91,9 @@ function DomainGenerator() {
   };
 
   const transformPrompt = (domainPrompt: string, domainStyle: string, customInstructions: string | null = null) => {
-    return `Please generate 10 domain names in the following styles: ${domainStyle}. The domain name must be related to the following business description: ${domainPrompt}.`;
+    const customInstructionsStr = customInstructions ? `###Custom Instructions### ${customInstructions}` : '';
+    const domainStyleStr = domainStyle ? `###Domain Style### ${domainStyle}` : '';
+    return `Please generate 10 domain names using the following parameter(s) ${domainPrompt} ${customInstructionsStr} ${domainStyleStr}`;
   };
 
   const genDomains = async (domainPrompt: string) => {
@@ -228,10 +239,9 @@ function DomainGenerator() {
                         <Label htmlFor='prompt' className='p-1'>Prompt</Label>
                         <Dialog>
                           <DialogTrigger className='text-slate-500'>
-                            {/* DISABLED FOR NOW*/}
                             <div className='flex'>
                               <Settings2 className='p-1 mr-1' />
-                              settings
+                              customise
                             </div>
                           </DialogTrigger>
                           <DialogContent>
@@ -248,7 +258,11 @@ function DomainGenerator() {
                       id='prompt'
                       onChange={(e) => setDomainPrompt(e.target.value)}
                       disabled={isLoading}
+                      maxLength={280}
                     />
+                    <ul className='text-xs text-slate-500'>
+                      {(domainStyle) && <li className='flex items-center'> Generate <span className='font-semibold ml-1'>{domainStyle}</span>-style domains{(customInstructions) && <li className='flex items-center'>, with the custom instruction: "{customInstructions}"</li>}</li>}
+                    </ul>
                     <Button type="submit" className='bg-black py-2 px-4 rounded-md text-zinc-200'
                       disabled={domainPrompt.length === 0 || isLoading}>Generate <Sparkles className='p-1 ml-1' /></Button>
                   </form>

@@ -54,18 +54,26 @@ interface CustomPromptSettingsProps {
 }
 
 const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domainStyle, setDomainStyle }: CustomPromptSettingsProps) => {
-  const [tempDomainStyle, setTempDomainStyle] = useState(domainStyle);
   const [tempCustomInstructions, setTempCustomInstructions] = useState(customInstructions);
 
   const { toast } = useToast();
 
-  const handleUpdate = () => {
-    setDomainStyle(tempDomainStyle);
+  const handleSaveInstruction = () => {
     setCustomInstructions(tempCustomInstructions);
 
     toast({
       title: "Settings Updated",
       description: "Your prompt settings have been updated.",
+      duration: 2000,
+    });
+  };
+
+  const handleResetInstruction = () => {
+    setTempCustomInstructions("");
+
+    toast({
+      title: "Settings Reset",
+      description: "Custom prompt has been reset.",
       duration: 2000,
     });
   };
@@ -81,44 +89,53 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
 
       <div className="flex flex-col gap-2 mt-4">
         <Label>Domain Style</Label>
-        <Select defaultValue="compound" onValueChange={setTempDomainStyle} value={tempDomainStyle}>
+        <Select defaultValue="pun" onValueChange={setDomainStyle} value={domainStyle}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a style" />
           </SelectTrigger>
           <SelectContent >
             <SelectGroup>
               <SelectLabel>Domain Style</SelectLabel>
-              <SelectItem value="compound" onSelect={() => setTempDomainStyle('compound')}>Compound</SelectItem>
-              <SelectItem value="pun" onSelect={() => setTempDomainStyle('pun')}>Pun</SelectItem>
-              <SelectItem value="descriptive" onSelect={() => setTempDomainStyle('descriptive')}>Descriptive</SelectItem>
-              <SelectItem value="abstract" onSelect={() => setTempDomainStyle('abstract')}>Abstract</SelectItem>
+              <SelectItem value="compound" onSelect={() => setDomainStyle('compound')}>Compound</SelectItem>
+              <SelectItem value="pun" onSelect={() => setDomainStyle('pun')}>Pun</SelectItem>
+              <SelectItem value="descriptive" onSelect={() => setDomainStyle('descriptive')}>Descriptive</SelectItem>
+              <SelectItem value="abstract" onSelect={() => setDomainStyle('abstract')}>Abstract</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select >
 
         <p className="text-xs text-slate-500">
-          {domainStyleDescriptionDict[tempDomainStyle]}
+          {domainStyleDescriptionDict[domainStyle]}
         </p>
       </div>
 
       <div className="flex flex-col gap-2 mt-4">
-        <Label>Custom Instructions</Label>
+        <Label>Custom Prompt Instructions</Label>
         <Textarea
           value={tempCustomInstructions}
           onChange={(e) => setTempCustomInstructions(e.target.value)}
           placeholder="e.g. domain must contain the word 'apple'"
           className="resize-none"
+          maxLength={280}
         />
         <p className="text-xs text-slate-500 pr-4">
-          Specific instructions for the AI to follow when generating domain names
+          Specific instructions for the AI to follow when generating domain names.
         </p>
       </div>
-
-      <Button
-        onClick={handleUpdate}
-        disabled={tempDomainStyle === domainStyle && tempCustomInstructions === customInstructions}>
-        Update
-      </Button>
+      <div className="flex gap-4 justify-end w-full">
+        <button
+          className="text-slate-500 disabled:text-slate-300"
+          disabled={tempCustomInstructions.length === 0}
+          onClick={handleResetInstruction}
+        >
+          reset
+        </button>
+        <Button
+          onClick={handleSaveInstruction}
+          disabled={tempCustomInstructions === customInstructions}>
+          Save instructions
+        </Button>
+      </div>
     </>
   );
 };
