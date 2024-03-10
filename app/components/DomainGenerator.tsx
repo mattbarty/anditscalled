@@ -3,13 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
-interface DomainSuggestion {
-  domain: string;
-  justification: string;
-  available?: boolean;
-  price?: number;
-}
-
 import {
   Label
 } from "@/app/components/ui/label";
@@ -51,13 +44,17 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 
-
-
 import { Sparkles, Loader2, Settings2, CheckCircle } from "lucide-react";
 import CustomPromptSettings from './CustomPromptSettings';
 import DomainSuggestions from './DomainSuggestions';
 
 
+interface DomainSuggestion {
+  domain: string;
+  justification?: string;
+  available?: boolean;
+  price?: number;
+}
 
 function DomainGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -101,7 +98,12 @@ function DomainGenerator() {
       })
     }).then(response => response.json());
 
-    return JSON.parse(response.message);
+    const domainNameList = JSON.parse(response.message);
+    const domainSuggestions: DomainSuggestion[] = domainNameList.domains.map((domain: string) => ({
+      domain,
+    }));
+
+    return domainSuggestions;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,9 +116,9 @@ function DomainGenerator() {
     console.log('completePrompt', completePrompt);
     const message = await genDomains(completePrompt);
 
-    setSelectedDomain(message.domains[0]);
-    await fetchDomainDetails(message.domains[0]);
-    setDomainSuggestions(message.domains);
+    setSelectedDomain(message[0]);
+    await fetchDomainDetails(message[0]);
+    setDomainSuggestions(message);
     setIsLoading(false);
   };
 

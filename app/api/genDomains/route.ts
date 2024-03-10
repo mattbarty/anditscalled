@@ -43,9 +43,9 @@ const exampleOutputPrompt = `
 ###EXAMPLE OUTPUT###
 {
   "domains": [
-    "example.com",
-    "example.com",
-    "example.com",
+    "example.com1",
+    "example.com2",
+    "example.com3",
     ...other domain names
   ]
 }
