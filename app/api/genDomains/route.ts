@@ -43,15 +43,10 @@ const exampleOutputPrompt = `
 ###EXAMPLE OUTPUT###
 {
   "domains": [
-    {
-      "domain": "www.example.com",
-      "justification": "This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point."
-    },
-    {
-      "domain": "www.example2.com",
-      "justification": "This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point."
-    }, 
-    ... more entries
+    "example.com",
+    "example.com",
+    "example.com",
+    ...other domain names
   ]
 }
 `
