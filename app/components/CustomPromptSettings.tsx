@@ -40,7 +40,8 @@ const domainStyleDescriptionDict: DomainStyleDescription = {
   'compound': 'Compound: Combines two relevant words to create a unique domain name.',
   'pun': 'Pun: Domains that play on words, offering a fun and catchy twist.',
   'descriptive': 'Descriptive: Clearly describes the business, providing immediate insight.',
-  'abstract': 'Abstract: Memorable and brandable names that don’t necessarily relate directly to the business.'
+  'abstract': 'Abstract: Memorable and brandable names that don’t necessarily relate directly to the business.',
+  'keywordrich': 'Keyword-rich: Domains that contain keywords relevant to the business, which can potentially help with SEO.'
 };
 
 
@@ -100,6 +101,7 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
               <SelectItem value="pun" onSelect={() => setDomainStyle('pun')}>Pun</SelectItem>
               <SelectItem value="descriptive" onSelect={() => setDomainStyle('descriptive')}>Descriptive</SelectItem>
               <SelectItem value="abstract" onSelect={() => setDomainStyle('abstract')}>Abstract</SelectItem>
+              <SelectItem value="keywordrich" onSelect={() => setDomainStyle('keywordrich')}>Keyword-Rich</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select >
