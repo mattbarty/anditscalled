@@ -54,37 +54,10 @@ import {
 
 
 import { Sparkles, Loader2, Settings2 } from "lucide-react";
-import CustomInstructions from './CustomInstructions';
+import CustomPromptSettings from './CustomPromptSettings';
 import DomainSuggestions from './DomainSuggestions';
 
-const domainStyles = [
-  {
-    id: "compound",
-    label: "Compound (default)",
-    description: "Combines two relevant words to create a unique domain name."
-  },
-  {
-    id: "pun",
-    label: "Pun",
-    description: "Domains that play on words, offering a fun and catchy twist."
-  },
-  {
-    id: "descriptive",
-    label: "Descriptive",
-    description: "Clearly describes the business, providing immediate insight."
-  },
-  {
-    id: "abstract",
-    label: "Abstract",
-    description: "Memorable and brandable names that don’t necessarily relate directly to the business."
-  },
-] as const;
 
-interface DomainStyle {
-  id: string;
-  label: string;
-  description: string;
-}
 
 function DomainGenerator() {
   const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +66,8 @@ function DomainGenerator() {
   const [openItem, setOpenItem] = useState('generate');
   const [selectedDomain, setSelectedDomain] = useState<DomainSuggestion>({} as DomainSuggestion);
   const [isLoadingDomainDetails, setIsLoadingDomainDetails] = useState(true);
-  const [switchStates, setSwitchStates] = useState(Object.fromEntries(domainStyles.map(style => [style.id, style.id === 'compound'])));
+  const [domainStyle, setDomainStyle] = useState<string>('compound');
+  const [customInstructions, setCustomInstructions] = useState<string>('');
 
   const getDomains = async (domain: string) => {
     const response = await fetch("http://localhost:3000/api/getDomains", {
@@ -107,13 +81,8 @@ function DomainGenerator() {
     return response;
   };
 
-  const transformPrompt = (domainPrompt: string, switchStates: Record<string, boolean>) => {
-    const styles = Object.entries(switchStates)
-      .filter(([_, value]) => value)
-      .map(([key, _]) => key)
-      .join(", ");
-
-    return `Please generate 10 domain names in the following styles: ${styles}. The domain name must be related to the following business description: ${domainPrompt}.`;
+  const transformPrompt = (domainPrompt: string, domainStyle: string, customInstructions: string | null = null) => {
+    return `Please generate 10 domain names in the following styles: ${domainStyle}. The domain name must be related to the following business description: ${domainPrompt}.`;
   };
 
   const genDomains = async (domainPrompt: string) => {
@@ -139,7 +108,7 @@ function DomainGenerator() {
     setDomainPrompt("");
     setOpenItem('suggestions');
 
-    const completePrompt = transformPrompt(domainPrompt, switchStates);
+    const completePrompt = transformPrompt(domainPrompt, domainStyle, customInstructions);
     console.log('completePrompt', completePrompt);
     const message = await genDomains(completePrompt);
 
@@ -235,7 +204,7 @@ function DomainGenerator() {
       <div className='flex flex-col w-full justify-center'>
         <Accordion type="single" value={openItem} onValueChange={setOpenItem}>
           <AccordionItem value="generate">
-            <AccordionTrigger>Generate Domains</AccordionTrigger>
+            <AccordionTrigger>Prompt</AccordionTrigger>
             <AccordionContent>
               <div className='flex justify-center relative w-full'>
                 <Image src='/sproutlingdomains-hero.png' alt='domain generator' width={400} height={500} />
@@ -246,7 +215,7 @@ function DomainGenerator() {
               <Card className='md:max-w-md -translate-y-5'>
                 <CardHeader>
                   <CardTitle>What's your idea?</CardTitle>
-                  <CardDescription>Describe your idea, product, or service and we'll generate some domain ideas</CardDescription>
+                  <CardDescription>Describe your idea, product, or service and we'll seed some domain ideas for you.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={(e) => handleSubmit(e)} className='grid gap-2'>
@@ -258,15 +227,19 @@ function DomainGenerator() {
                       <div className='flex w-full justify-between'>
                         <Label htmlFor='prompt' className='p-1'>Prompt</Label>
                         <Dialog>
-                          <DialogTrigger className='text-slate-500' disabled>
+                          <DialogTrigger className='text-slate-500'>
                             {/* DISABLED FOR NOW*/}
-                            {/* <div className='flex'>
+                            <div className='flex'>
                               <Settings2 className='p-1 mr-1' />
                               settings
-                            </div> */}
+                            </div>
                           </DialogTrigger>
                           <DialogContent>
-                            <CustomInstructions switchStates={switchStates} setSwitchStates={setSwitchStates} domainStyles={domainStyles as unknown as DomainStyle[]} />
+                            <CustomPromptSettings
+                              customInstructions={customInstructions}
+                              setCustomInstructions={setCustomInstructions}
+                              domainStyle={domainStyle}
+                              setDomainStyle={setDomainStyle} />
                           </DialogContent>
                         </Dialog>
                       </div>
