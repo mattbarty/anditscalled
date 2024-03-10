@@ -261,7 +261,7 @@ function DomainGenerator() {
                       maxLength={280}
                     />
                     <ul className='text-xs text-slate-500'>
-                      {(domainStyle) && <li className='flex items-center'> Generate <span className='font-semibold ml-1'>{domainStyle}</span>-style domains{(customInstructions) && <li className='flex items-center'>, with the custom instruction: "{customInstructions}"</li>}</li>}
+                      {(domainStyle) && <li className='flex items-center'> Generate 10 <span className='font-semibold ml-1'>{domainStyle}</span>-style domains{(customInstructions) && <li className='flex items-center'>, with the custom instruction: "{customInstructions}"</li>}</li>}
                     </ul>
                     <Button type="submit" className='bg-black py-2 px-4 rounded-md text-zinc-200'
                       disabled={domainPrompt.length === 0 || isLoading}>Generate <Sparkles className='p-1 ml-1' /></Button>
