@@ -65,6 +65,15 @@ function DomainGenerator() {
   const [isLoadingDomainDetails, setIsLoadingDomainDetails] = useState(true);
   const [domainStyle, setDomainStyle] = useState<string>('pun');
   const [customInstructions, setCustomInstructions] = useState<string>('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
 
   const getDomains = async (domain: string) => {
     const response = await fetch("http://localhost:3000/api/getDomains", {
