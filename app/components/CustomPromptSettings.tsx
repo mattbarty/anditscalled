@@ -62,8 +62,8 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
     setCustomInstructions(tempCustomInstructions);
 
     toast({
-      title: "Settings Updated",
-      description: "Your prompt settings have been updated.",
+      title: "Custom Instructions Updated",
+      description: "Custom prompt instructions updated.",
       duration: 2000,
     });
   };
@@ -72,8 +72,8 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
     setTempCustomInstructions("");
 
     toast({
-      title: "Settings Reset",
-      description: "Custom prompt has been reset.",
+      title: "Custom Instructions Reset",
+      description: "Custom prompt instructions reset.",
       duration: 2000,
     });
   };
@@ -89,7 +89,14 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
 
       <div className="flex flex-col gap-2 mt-4">
         <Label>Domain Style</Label>
-        <Select defaultValue="pun" onValueChange={setDomainStyle} value={domainStyle}>
+        <Select defaultValue="pun" onValueChange={(value) => {
+          setDomainStyle(value);
+          toast({
+            title: "Style Updated",
+            description: `Domain style updated to ${value}.`,
+            duration: 2000,
+          });
+        }} value={domainStyle}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a style" />
           </SelectTrigger>
@@ -109,32 +116,32 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
         </p>
       </div>
 
-      <div className="flex flex-col gap-2 mt-4">
-        <Label>Custom Prompt Instructions</Label>
+      <Label>Custom Prompt Instructions</Label>
+      <div className="border pb-2 rounded-md flex flex-col gap-2">
         <Textarea
           value={tempCustomInstructions}
           onChange={(e) => setTempCustomInstructions(e.target.value)}
           placeholder="e.g. domain must contain the word 'apple'"
-          className="resize-none text-[16px]"
+          className="resize-none text-[16px] mx-0 rounded-md"
           maxLength={280}
         />
-        <p className="text-xs text-slate-500 pr-4">
+        <p className="text-xs text-slate-500 px-4">
           Specific instructions for the AI to follow when generating domain names.
         </p>
-      </div>
-      <div className="flex gap-4 justify-end w-full">
-        <button
-          className="text-slate-500 disabled:text-slate-300"
-          disabled={tempCustomInstructions.length === 0}
-          onClick={handleResetInstruction}
-        >
-          reset
-        </button>
-        <Button
-          onClick={handleSaveInstruction}
-          disabled={tempCustomInstructions === customInstructions}>
-          Save instructions
-        </Button>
+        <div className="flex gap-4 justify-end w-full px-4 mt-2">
+          <button
+            className="text-slate-500 disabled:text-slate-300"
+            disabled={tempCustomInstructions.length === 0}
+            onClick={handleResetInstruction}
+          >
+            reset
+          </button>
+          <Button
+            onClick={handleSaveInstruction}
+            disabled={tempCustomInstructions === customInstructions}>
+            Save instructions
+          </Button>
+        </div>
       </div>
     </>
   );
