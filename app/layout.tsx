@@ -9,8 +9,8 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "anditscalled",
-  description: "startup domain name generator",
+  title: "🌱 domainSprout",
+  description: "Turn your ideas into domain names",
 };
 
 export default function RootLayout({
