@@ -72,7 +72,7 @@ function DomainGenerator() {
   const { toast } = useToast();
 
   const evalPrompt = async (domainPrompt: string) => {
-    const response = await fetch("http://localhost:3000/api/evalPrompt", {
+    const response = await fetch("/api/evalPrompt", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ function DomainGenerator() {
   };
 
   const getDomains = async (domain: string) => {
-    const response = await fetch("http://localhost:3000/api/getDomains", {
+    const response = await fetch("/api/getDomains", {
       method: "POST",
       headers: {
         "domain": domain,
@@ -106,7 +106,7 @@ function DomainGenerator() {
   };
 
   const genDomains = async (domainPrompt: string) => {
-    const response = await fetch("http://localhost:3000/api/genDomains", {
+    const response = await fetch("/api/genDomains", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -268,16 +268,17 @@ function DomainGenerator() {
           <AccordionItem value="generate">
             <AccordionTrigger>🌱 DomainSprout</AccordionTrigger>
             <AccordionContent className='flex flex-col items-center'>
-              <div className='flex justify-center relative w-full'>
-                <Image src='/sproutlingdomains-hero.png' alt='domain generator' width={400} height={500} />
-                <div className='absolute left-1/3 bottom-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText1 font-semibold text-slate-200 duration-1000'>.com</div>
-                <div className='absolute right-20 bottom-2/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText2 font-semibold text-slate-200 duration-700'>.xyz</div>
-                <div className='absolute left-20 top-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText3 font-semibold text-slate-200 duration-800'>.io</div>
+              <div className='hidden justify-center relative w-full md:flex'>
+                <Image src='https://dixog9cdtdsmc.cloudfront.net/projects/sproutlingdomains-hero.png' alt='domain generator' width={400} height={500} />
+                <div className='absolute left-[15%] bottom-1/3 md:left-1/3 md:bottom-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText1 font-semibold text-slate-200 duration-1000'>.com</div>
+                <div className='absolute right-[15%] bottom-2/3 md:right-20 md:bottom-2/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText2 font-semibold text-slate-200 duration-700'>.xyz</div>
+                <div className='absolute left-[5%] top-1/3 md:left-20 md:top-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText3 font-semibold text-slate-200 duration-800'>.io</div>
               </div>
-              <Card className='md:max-w-md -translate-y-5'>
+              <Card className='md:max-w-md md:-translate-y-5'>
                 <CardHeader>
                   <CardTitle>What&apos;s your idea?</CardTitle>
-                  <CardDescription>Describe your idea, product, or service and we&apos;ll seed some domain ideas for you.</CardDescription>
+                  <CardDescription className='hidden md:block'>Describe your idea, product, or service and we&apos;ll seed some domain ideas for you</CardDescription>
+                  <CardDescription className='block md:hidden'>Describe your business idea and we&apos;ll seed some domain ideas for you</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={(e) => handleSubmit(e)} className='grid gap-2'>
