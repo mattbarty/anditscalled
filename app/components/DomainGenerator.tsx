@@ -310,6 +310,7 @@ function DomainGenerator() {
                       onChange={(e) => setDomainPrompt(e.target.value)}
                       disabled={isLoading}
                       maxLength={280}
+                      className='text-[16px]'
                     />
                     <ul className='text-xs text-slate-500'>
                       {
@@ -339,7 +340,7 @@ function DomainGenerator() {
                     <SkeletonDomainTags />
                   </>
                 ) : (
-                  <DomainSuggestions domainSuggestions={domainSuggestions} isLoadingDomainDetails={isLoadingDomainDetails} selectedDomain={selectedDomain} handleSelectedDomainClick={handleSelectedDomainClick} />
+                  <DomainSuggestions domainSuggestions={domainSuggestions} isLoadingDomainDetails={isLoadingDomainDetails} selectedDomain={selectedDomain} handleSelectedDomainClick={handleSelectedDomainClick} setOpenItem={setOpenItem} />
                 )}
               </AccordionContent>
             </AccordionItem>

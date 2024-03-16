@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/app/components/ui/card";
 
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ArrowUpFromLineIcon } from "lucide-react";
 
 interface DomainSuggestion {
   domain: string;
@@ -26,6 +26,7 @@ interface DomainSuggestionProps {
   domainSuggestions: DomainSuggestion[];
   isLoadingDomainDetails: boolean;
   selectedDomain: DomainSuggestion;
+  setOpenItem: React.Dispatch<React.SetStateAction<string>>;
   handleSelectedDomainClick: (domain: DomainSuggestion) => void;
 }
 
@@ -33,8 +34,14 @@ const DomainSuggestions = ({
   domainSuggestions,
   isLoadingDomainDetails,
   selectedDomain,
+  setOpenItem,
   handleSelectedDomainClick
 }: DomainSuggestionProps) => {
+
+  const handlReturnToPromptClick = () => {
+    setOpenItem('generate');
+    window.scrollTo(0, 0);
+  };
 
 
   return (
@@ -86,8 +93,11 @@ const DomainSuggestions = ({
             ))}
           </div>
         )}
+        <button className="mt-8 w-full text-teal-500 hover:text-teal-400 flex flex-col items-center" onClick={handlReturnToPromptClick}>
+          <ArrowUpFromLineIcon />
+          <span className="font-semibold">Return to prompt</span>
+        </button>
       </div>
-
     </>
   );
 };

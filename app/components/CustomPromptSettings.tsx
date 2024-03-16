@@ -115,7 +115,7 @@ const CustomPromptSettings = ({ customInstructions, setCustomInstructions, domai
           value={tempCustomInstructions}
           onChange={(e) => setTempCustomInstructions(e.target.value)}
           placeholder="e.g. domain must contain the word 'apple'"
-          className="resize-none"
+          className="resize-none text-[16px]"
           maxLength={280}
         />
         <p className="text-xs text-slate-500 pr-4">

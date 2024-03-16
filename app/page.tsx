@@ -7,7 +7,7 @@ export default function Home() {
       <div className="mx-auto max-w-lg w-full">
         <DomainGenerator />
       </div>
-      <div className="flex gap-1 text-slate-500 text-sm md:text-base items-center">Made with <Heart className="p-[3px] md:p-[2px]" /> by <a href="https://www.mattbarty.com/projects" target="_blank" className='text-teal-500 font-semibold hover:text-teal-400 hover:underline underline-offset-2'>Matt Barty</a></div>
+      <div className="flex gap-1 text-slate-500 text-sm md:text-base items-center mt-4">Made with <Heart className="p-[3px] md:p-[2px]" /> by <a href="https://www.mattbarty.com/projects" target="_blank" className='text-teal-500 font-semibold hover:text-teal-400 hover:underline underline-offset-2'>Matt Barty</a></div>
     </main>
   );
 }

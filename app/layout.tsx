@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Head from 'next/head'; // <-- Import the Head component
 import { Open_Sans } from "next/font/google";
 import { Toaster } from "./components/ui/toaster";
 import "./globals.css";
@@ -21,9 +20,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
-      </Head>
       <body className={openSans.className}>
         {children}
         <Toaster />
