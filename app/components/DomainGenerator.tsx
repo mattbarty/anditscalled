@@ -171,12 +171,36 @@ function DomainGenerator() {
 
     const completePrompt = transformPrompt(domainPrompt, domainStyle, customInstructions);
     console.log('completePrompt', completePrompt);
-    const message = await genDomains(completePrompt);
 
-    setSelectedDomain(message.domains[0]);
-    await fetchDomainDetails(message.domains[0]);
-    setDomainSuggestions(message.domains);
-    setIsLoading(false);
+    const timeout = (ms: number) => {
+      return new Promise((resolve) => setTimeout(resolve, ms));
+    };
+
+    try {
+      const message = await Promise.race([
+        genDomains(completePrompt),
+        timeout(20000) // Set timeout to 20000 milliseconds (20 seconds)
+      ]);
+
+      if (!message) {
+        throw new Error('Generation of domains took too long and was aborted.');
+      }
+
+      setSelectedDomain(message.domains[0]);
+      await fetchDomainDetails(message.domains[0]);
+      setDomainSuggestions(message.domains);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error Generating Domains",
+        description: "Somethings gone wrong and process has timed out. Please try again.",
+        duration: 5000,
+        variant: "destructive",
+      });
+      setOpenItem('generate');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const parsePrice = (price: number): number => {
