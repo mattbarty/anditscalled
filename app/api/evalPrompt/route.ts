@@ -30,6 +30,7 @@ The following are examples of valid and invalid input that you may receive:
 "Knitted hats but for cats",
 "My idea is to create a website that connects people who want to learn a new language with native speakers of that language."
 "things that make boom noises"
+"Pictures of kittens"
 
 ###INVALID INPUT EXAMPLES###
 "hello",

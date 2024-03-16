@@ -276,8 +276,8 @@ function DomainGenerator() {
               </div>
               <Card className='md:max-w-md -translate-y-5'>
                 <CardHeader>
-                  <CardTitle>What's your idea?</CardTitle>
-                  <CardDescription>Describe your idea, product, or service and we'll seed some domain ideas for you.</CardDescription>
+                  <CardTitle>What&apos;s your idea?</CardTitle>
+                  <CardDescription>Describe your idea, product, or service and we&apos;ll seed some domain ideas for you.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={(e) => handleSubmit(e)} className='grid gap-2'>
@@ -312,7 +312,9 @@ function DomainGenerator() {
                       maxLength={280}
                     />
                     <ul className='text-xs text-slate-500'>
-                      {(domainStyle) && <li className='flex items-center'> Generate 10 <span className='font-semibold ml-1'>{domainStyle}</span>-style domains{(customInstructions) && <li className='flex items-center'>, with the custom instruction: "{customInstructions}"</li>}</li>}
+                      {
+                        (domainStyle) && <li className='flex items-center'> Generate 10 <span className='font-semibold ml-1'>{domainStyle}</span>-style domains</li>}
+                      {(customInstructions) && <li className='flex items-center'>With the custom instruction: &quot;{customInstructions}&quot;</li>}
                     </ul>
                     <Button type="submit" className='bg-black py-2 px-4 rounded-md text-zinc-200'
                       disabled={domainPrompt.length === 0 || isLoading}>Generate <Sparkles className='p-1 ml-1' /></Button>
