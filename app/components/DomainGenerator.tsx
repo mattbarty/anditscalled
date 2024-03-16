@@ -277,8 +277,7 @@ function DomainGenerator() {
               <Card className='md:max-w-md md:-translate-y-5'>
                 <CardHeader>
                   <CardTitle>What&apos;s your idea?</CardTitle>
-                  <CardDescription className='hidden md:block'>Describe your idea, product, or service and we&apos;ll seed some domain ideas for you</CardDescription>
-                  <CardDescription className='block md:hidden'>Describe your business idea and we&apos;ll seed some domain ideas for you</CardDescription>
+                  <CardDescription >Describe your idea, product, or service and we&apos;ll seed some domain ideas for you</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={(e) => handleSubmit(e)} className='grid gap-2'>
