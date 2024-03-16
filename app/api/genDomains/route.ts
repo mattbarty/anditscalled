@@ -63,7 +63,9 @@ You will be assisting the user in generating a list of creative, well-considered
 ${userPrompt}
 ${agentPrompt}
 ${domainStylePrompt}
-${exampleOutputPrompt}`
+${exampleOutputPrompt}
+Remember, your response must be a valid JSON object containing an array of domain names and justifications.
+`
 
 
 
@@ -85,7 +87,7 @@ try {
       {role: "system", content: systemPrompt},
       ...messages
     ],
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-1106",
   });
 
   const openaiResponse = completion.choices[0].message.content;

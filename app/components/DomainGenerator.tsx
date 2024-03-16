@@ -51,7 +51,7 @@ import {
   DialogTrigger,
 } from "@/app/components/ui/dialog";
 
-
+import { useToast } from "@/app/components/ui/use-toast";
 
 import { Sparkles, Loader2, Settings2, CheckCircle } from "lucide-react";
 import CustomPromptSettings from './CustomPromptSettings';
@@ -68,14 +68,23 @@ function DomainGenerator() {
   const [isLoadingDomainDetails, setIsLoadingDomainDetails] = useState(true);
   const [domainStyle, setDomainStyle] = useState<string>('pun');
   const [customInstructions, setCustomInstructions] = useState<string>('');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleDialogOpen = () => {
-    setIsDialogOpen(true);
-  };
+  const { toast } = useToast();
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
+  const evalPrompt = async (domainPrompt: string) => {
+    const response = await fetch("http://localhost:3000/api/evalPrompt", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        messages: [
+          { role: "user", content: domainPrompt },
+        ]
+      })
+    }).then(response => response.json());
+
+    return JSON.parse(response.message);
   };
 
   const getDomains = async (domain: string) => {
@@ -97,25 +106,66 @@ function DomainGenerator() {
   };
 
   const genDomains = async (domainPrompt: string) => {
-
     const response = await fetch("http://localhost:3000/api/genDomains", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        messages: [
-          { role: "user", content: domainPrompt },
-        ]
-      })
+        messages: [{ role: "user", content: domainPrompt }],
+      }),
     }).then(response => response.json());
 
-    return JSON.parse(response.message);
+    let cleanedMessage = response.message;
+
+    // Check if the message is a string that might contain backticks or other non-JSON characters
+    if (typeof cleanedMessage === 'string') {
+      // Attempt to remove the triple backticks and any other non-JSON compliant formatting
+      // This is a basic cleanup and might need adjustment depending on the actual response format
+      cleanedMessage = cleanedMessage.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      try {
+        // Try to parse the cleaned string as JSON
+        return JSON.parse(cleanedMessage);
+      } catch (error) {
+        console.error("Error parsing JSON from cleaned response.message", error);
+        throw error;
+      }
+    } else {
+      // If it's not a string, assume it's already the correct object format
+      return cleanedMessage;
+    }
   };
+
+  const randomPromptExamples = [
+    'Knitted hats but for kittens',
+    'Language learning platform for kids',
+    'Instruments that make bird noises',
+    'A social network for dogs',
+    'A dog walking service that uses drones',
+  ];
+
+  const pickRandomPromptExample = () => {
+    return randomPromptExamples[Math.floor(Math.random() * randomPromptExamples.length)];
+  };
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    const isValidPrompt = await evalPrompt(domainPrompt);
+    console.log('isValidPrompt', isValidPrompt);
+    if (!isValidPrompt) {
+      setIsLoading(false);
+      toast({
+        title: "Invalid Prompt",
+        description: `Your prompt is either invalid or too vague. Try something like: "${pickRandomPromptExample()}."`,
+        duration: 5000,
+        variant: "destructive",
+      });
+      return;
+    }
+
     setDomainPrompt("");
     setOpenItem('suggestions');
 
@@ -163,6 +213,7 @@ function DomainGenerator() {
       await fetchDomainDetails(domain);
     };
   };
+
 
   const SkeletonCard = () => {
     return (
@@ -215,8 +266,8 @@ function DomainGenerator() {
       <div className='flex flex-col w-full justify-center'>
         <Accordion type="single" value={openItem} onValueChange={setOpenItem}>
           <AccordionItem value="generate">
-            <AccordionTrigger>Prompt</AccordionTrigger>
-            <AccordionContent>
+            <AccordionTrigger>🌱 DomainSprout</AccordionTrigger>
+            <AccordionContent className='flex flex-col items-center'>
               <div className='flex justify-center relative w-full'>
                 <Image src='/sproutlingdomains-hero.png' alt='domain generator' width={400} height={500} />
                 <div className='absolute left-1/3 bottom-1/3 bg-teal-600 px-2 py-1 rounded-md opacity-85 hoveringText1 font-semibold text-slate-200 duration-1000'>.com</div>
