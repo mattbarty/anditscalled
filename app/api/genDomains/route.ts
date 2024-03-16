@@ -43,10 +43,15 @@ const exampleOutputPrompt = `
 ###EXAMPLE OUTPUT###
 {
   "domains": [
-    "example.com",
-    "example.com",
-    "example.com",
-    ...other domain names
+    {
+      "domain": "www.example.com",
+      "justification": "This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point."
+    },
+    {
+      "domain": "www.example2.com",
+      "justification": "This domain name was generated because it is catchy and memorable while still representing the user's brand, business proposition, or unique selling point."
+    }, 
+    ... more entries
   ]
 }
 `
@@ -58,7 +63,9 @@ You will be assisting the user in generating a list of creative, well-considered
 ${userPrompt}
 ${agentPrompt}
 ${domainStylePrompt}
-${exampleOutputPrompt}`
+${exampleOutputPrompt}
+Remember, your response must be a valid JSON object containing an array of domain names and justifications.
+`
 
 
 
@@ -80,7 +87,7 @@ try {
       {role: "system", content: systemPrompt},
       ...messages
     ],
-    model: "gpt-3.5-turbo",
+    model: "gpt-3.5-turbo-1106",
   });
 
   const openaiResponse = completion.choices[0].message.content;
