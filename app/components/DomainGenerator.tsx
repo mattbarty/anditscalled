@@ -179,7 +179,7 @@ function DomainGenerator() {
     try {
       const message = await Promise.race([
         genDomains(completePrompt),
-        timeout(20000) // Set timeout to 20000 milliseconds (20 seconds)
+        timeout(30000) // Set timeout to 30000 milliseconds (30 seconds)
       ]);
 
       if (!message) {
