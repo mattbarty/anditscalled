@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { Open_Sans } from "next/font/google";
 import { Toaster } from "./components/ui/toaster";
 import "./globals.css";
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={openSans.className}>
         {children}
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
