@@ -24,7 +24,7 @@ Leveraging the capabilities of the GPT API, DomainSprout generates domain name s
 <h3>Installation</h3>
 <p>Follow these steps to get DomainBrain up and running:</p>
 <ol>
-    <li>Clone the repository:<br><code>git clone https://github.com/yourusername/DomainBrain.git<br>cd DomainBrain</code></li>
+    <li>Clone the repository:<br><code>git clone https://github.com/mattbarty/domainSprout.git</code></br><code>cd domainSprout.git</code></li>
     <li>Install dependencies:<br><code>npm install</code></li>
     <li>Set up environment variables by creating a <code>.env</code> file with your API keys.</li>
     <li>Start the application:<br><code>npm start</code></li>
@@ -45,4 +45,6 @@ Leveraging the capabilities of the GPT API, DomainSprout generates domain name s
 <ul>
     <li>OpenAI for the GPT API</li>
     <li>GoDaddy for the Domain Registration API</li>
+    <li>Frontend designed using: ShadCN UI, Tailwindcss, Lucide</li>
+    <li>Backend handled by Vercel, NextJS 14, AWS</li>
 </ul>
