@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+https://github.com/mattbarty/domainSprout/assets/52583796/150bafdc-24b8-4a90-8f55-953ee134b6d5
 
-## Getting Started
+<h1>🌱 DomainSprout</h1>
+<p>visit <a href='domainsprout.com' target='_blank'>domainsprout.com</a> to turn your Ideas into Domains</p>
 
-First, run the development server:
+<h2>Overview</h2>
+<p>DomainSprout is a tool designed to assist entrepreneurs, startups, and businesses in brainstorming unique and clever domain names for their new ventures or products.</br>
+Leveraging the capabilities of the GPT API, DomainSprout generates domain name suggestions that are not only memorable and catchy but also relevant to your business idea or product description. Once generated, these domain names can be queried live against the GoDaddy API to check for availability, simplifying the process of securing the perfect domain name for your project.</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<h2>Features</h2>
+<ul>
+    <li><b>Intuitive Interface</b>: Simple and user-friendly interface, making it easy for anyone to get started with their domain name search.</li>
+  <li><b>GPT-Powered Suggestions</b>: Utilize the GPT API to generate 10 unique and clever domain names based on the input business idea or product description.</li>
+  <li><b>Live Availability Check</b>: Seamlessly query the availability of suggested domain names in real-time using the GoDaddy API.</li>
+</ul>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<h2>Getting Started</h2>
+<h3>Prerequisites</h3>
+<ul>
+  <li>A GoDaddy Developer Account and API Key</li>
+  <li>An OpenAI Account and API Key</li>
+</ul>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<h3>Installation</h3>
+<p>Follow these steps to get DomainBrain up and running:</p>
+<ol>
+    <li>Clone the repository:<br><code>git clone https://github.com/mattbarty/domainSprout.git</code></br><code>cd domainSprout.git</code></li>
+    <li>Install dependencies:<br><code>npm install</code></li>
+    <li>Set up environment variables by creating a <code>.env</code> file with your API keys.</li>
+    <li>Start the application:<br><code>npm start</code></li>
+</ol>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<h2>Usage</h2>
+<ol>
+    <li><strong>Enter Your Business Idea:</strong> Type a description of your idea.</li>
+    <li><strong>Generate Domain Names:</strong> Click "Generate" for suggestions.</li>
+    <li><strong>Check Availability:</strong> Click "See listing" next to names to see if they're available.</li>
+    <li><strong>Register Domain:</strong> Purchase and register your domain on GoDaddy.</li>
+</ol>
 
-## Learn More
+<h2>License</h2>
+<p>This project is licensed under the MIT License - see the LICENSE file for details.</p>
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<h2>Acknowledgments</h2>
+<ul>
+    <li>OpenAI for the GPT API</li>
+    <li>GoDaddy for the Domain Registration API</li>
+    <li>Frontend designed using: ShadCN UI, Tailwindcss, Lucide</li>
+    <li>Backend handled by Vercel, NextJS 14, AWS</li>
+</ul>
