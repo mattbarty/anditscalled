@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import {OpenAI} from "openai";
+import { NextResponse } from 'next/server';
+import { OpenAI } from 'openai';
 
 const openai = new OpenAI();
 
@@ -9,7 +9,7 @@ The user is an entrepreneur who is looking to start a new business.
 They want to create a website for their business and are looking for a domain name. 
 They want the domain name to be catchy and memorable while still representing either their brand, business proposition, or unique selling point.
 The user will describe their business and what they are looking for in a domain name and will expect the agent to provide them with a list of domain names that are available for purchase.
-`
+`;
 
 const agentPrompt = `
 ###AGENT###
@@ -21,7 +21,7 @@ You MUST avoid generic names, or boring strings of words.
 Your response must not include www. as this will be added automatically.
 Your justification tone should be concise and professional, while still being engaging and persuasive.
 Your responses must be in VALID json format and include the suggested domain name and justification for why this domain name was generated.
-`
+`;
 
 const domainStylePrompt = `
 The user may also provide a list of domain styles that they are interested in.
@@ -37,7 +37,7 @@ Compound: Combining two relevant words to create a unique and memorable domain n
 Acronym: Using initials or abbreviations to make the domain shorter and easier to remember (e.g., IBM.com for International Business Machines).
 
 Keyword-rich: Domains that contain keywords relevant to the business, which can potentially help with SEO (e.g., BestCoffeeBeans.com).
-`
+`;
 
 const exampleOutputPrompt = `
 ###EXAMPLE OUTPUT###
@@ -54,7 +54,7 @@ const exampleOutputPrompt = `
     ... more entries
   ]
 }
-`
+`;
 
 const systemPrompt = `
 ###SYSTEM###
@@ -65,41 +65,36 @@ ${agentPrompt}
 ${domainStylePrompt}
 ${exampleOutputPrompt}
 Remember, your response must be a valid JSON object containing an array of domain names and justifications.
-`
-
-
+`;
 
 export async function POST(request: Request) {
+	const { messages } = await request.json();
 
-  const {messages}  = await request.json()
+	// Check if domain is provided
+	// If not, return error message
+	if (!messages) {
+		return NextResponse.json({
+			message: 'No messages provided',
+		});
+	}
+	try {
+		console.log('fetching openai message');
+		const completion = await openai.chat.completions.create({
+			messages: [{ role: 'system', content: systemPrompt }, ...messages],
+			model: 'gpt-4o',
+		});
 
-  // Check if domain is provided
-  // If not, return error message
-  if (!messages) {
-    return NextResponse.json({
-      message: "No messages provided"
-    });
-  }
-try {
-  console.log("fetching openai message");
-  const completion = await openai.chat.completions.create({
-    messages: [
-      {role: "system", content: systemPrompt},
-      ...messages
-    ],
-    model: "gpt-3.5-turbo-1106",
-  });
+		const openaiResponse = completion.choices[0].message.content;
 
-  const openaiResponse = completion.choices[0].message.content;
+		console.log('openai response', openaiResponse);
 
-  console.log("openai response", openaiResponse);
-
-  return NextResponse.json({
-    message: completion.choices[0].message.content
-  });
-} catch (error) {
-  console.error(error);
-  return NextResponse.json({
-    message: "Error fetching message from OpenAI"
-  });
-}}
+		return NextResponse.json({
+			message: completion.choices[0].message.content,
+		});
+	} catch (error) {
+		console.error(error);
+		return NextResponse.json({
+			message: 'Error fetching message from OpenAI',
+		});
+	}
+}
