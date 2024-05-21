@@ -81,7 +81,7 @@ export async function POST(request: Request) {
 		console.log('fetching openai message');
 		const completion = await openai.chat.completions.create({
 			messages: [{ role: 'system', content: systemPrompt }, ...messages],
-			model: 'gpt-4o',
+			model: 'gpt-3.5-turbo',
 		});
 
 		const openaiResponse = completion.choices[0].message.content;
