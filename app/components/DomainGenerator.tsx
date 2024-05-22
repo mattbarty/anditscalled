@@ -102,7 +102,7 @@ function DomainGenerator() {
   const transformPrompt = (domainPrompt: string, domainStyle: string, customInstructions: string | null = null) => {
     const customInstructionsStr = customInstructions ? `###Custom Instructions### ${customInstructions}` : '';
     const domainStyleStr = domainStyle ? `###Domain Style### ${domainStyle}` : '';
-    return `Please generate 10 domain names using the following parameter(s) ${domainPrompt} ${customInstructionsStr} ${domainStyleStr}`;
+    return `Please generate 6 domain names using the following parameter(s) ${domainPrompt} ${customInstructionsStr} ${domainStyleStr}`;
   };
 
   const genDomains = async (domainPrompt: string) => {
