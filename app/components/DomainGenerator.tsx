@@ -338,7 +338,7 @@ function DomainGenerator() {
                     />
                     <ul className='text-xs text-slate-500'>
                       {
-                        (domainStyle) && <li className='flex items-center'> Generate 10 <span className='font-semibold ml-1'>{domainStyle}</span>-style domains</li>}
+                        (domainStyle) && <li className='flex items-center'> Generate 6 <span className='font-semibold ml-1'>{domainStyle}</span>-style domains</li>}
                       {(customInstructions) && <li className='flex items-center'>With the custom instruction: &quot;{customInstructions}&quot;</li>}
                     </ul>
                     <Button type="submit" className='bg-black py-2 px-4 rounded-md text-zinc-200'
