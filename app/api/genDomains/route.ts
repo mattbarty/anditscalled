@@ -67,10 +67,6 @@ ${exampleOutputPrompt}
 Remember, your response must be a valid JSON object containing an array of domain names and justifications.
 `;
 
-export const config = {
-	maxDuration: 30,
-};
-
 export async function POST(request: Request) {
 	const { messages } = await request.json();
 
